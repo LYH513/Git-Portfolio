@@ -1,0 +1,2 @@
+export { useExampleStore } from './useExampleStore';
+
