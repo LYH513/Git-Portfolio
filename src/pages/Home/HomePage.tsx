@@ -1,18 +1,17 @@
-import { useNavigate } from 'react-router-dom';
+import Header from './components/Header';
+import CreateProjectButton from './components/CreateProjectButton';
+import ProjectList from './components/ProjectList';
 
 function HomePage() {
-  const navigate = useNavigate();
-
   return (
-    <main>
-      <h1>홈</h1>
-      <p>프로젝트 템플릿이 정상적으로 동작하는지 확인하는 테스트 페이지입니다.</p>
-      <button type="button" onClick={() => navigate('/about')}>
-        소개 페이지로 이동
-      </button>
-    </main>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <main className="pt-4">
+        <CreateProjectButton />
+        <ProjectList />
+      </main>
+    </div>
   );
 }
 
 export default HomePage;
-
