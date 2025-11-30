@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import AddProjectModal from './AddProjectModal';
+import { useGitHubConnection } from '../hooks/useGitHubConnection';
 
 export default function CreateProjectButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { checkGitHubStatus, connectGitHub } = useGitHubConnection();
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -12,10 +14,25 @@ export default function CreateProjectButton() {
     setIsModalOpen(false);
   };
 
-  const handleImportFromGitHub = () => {
-    // TODO: GitHub 연동 기능 구현
-    console.log('GitHub에서 가져오기');
+  const handleImportFromGitHub = async () => {
     handleCloseModal();
+    
+    try {
+      // GitHub 연결 상태 확인
+      console.log('GitHub 가져오기 버튼 클릭, 상태 확인 중...');
+      const isConnected = await checkGitHubStatus();
+      console.log('연결 상태:', isConnected);
+      
+      if (!isConnected) {
+        // 연결되어 있지 않으면 GitHub OAuth 연결 시작
+        console.log('GitHub OAuth 연결 시작');
+        connectGitHub();
+      }
+    } catch (error) {
+      console.error('GitHub 연결 처리 중 오류:', error);
+      // 오류 발생 시에도 OAuth 연결 시도
+      connectGitHub();
+    }
   };
 
   const handleCreateManually = () => {

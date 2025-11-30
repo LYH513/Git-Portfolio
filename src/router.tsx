@@ -1,15 +1,21 @@
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from './pages/Home/HomePage';
 import LoginPage from './pages/Login/LoginPage';
-import PortporioPage from './pages/Portporio/PortporioPage';
+import PortfolioPage from './pages/Portfolio/PortfolioPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import Layout from './components/Layout';
+import RepositorySelectPage from './pages/RepositorySelect/RepositorySelectPage';
+import GitHubCallbackPage from './pages/GitHubCallback/GitHubCallbackPage';
+import NotFoundPage from './pages/NotFound/NotFoundPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
       <ProtectedRoute>
-        <HomePage />
+        <Layout>
+          <HomePage />
+        </Layout>
       </ProtectedRoute>
     ),
   },
@@ -18,7 +24,39 @@ const router = createBrowserRouter([
     path: '/portfolio',
     element: (
       <ProtectedRoute>
-        <PortporioPage />
+        <Layout>
+          <PortfolioPage/>
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/repository-add',
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <RepositorySelectPage/>
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/auth/github/callback',
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <GitHubCallbackPage />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '*',
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <NotFoundPage />
+        </Layout>
       </ProtectedRoute>
     ),
   },

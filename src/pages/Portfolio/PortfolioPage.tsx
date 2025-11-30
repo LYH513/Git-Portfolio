@@ -1,5 +1,4 @@
-
-function PortporioPage() {
+function PortfolioPage() {
 
   return (
     <main>
@@ -8,4 +7,4 @@ function PortporioPage() {
   );
 }
 
-export default PortporioPage;
+export default PortfolioPage;
