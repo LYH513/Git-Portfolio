@@ -2,16 +2,18 @@ import styled from '@emotion/styled';
 
 interface CreatePortfolioButtonProps {
   disabled: boolean;
+  isLoading?: boolean;
   onClick: () => void;
 }
 
 export default function CreatePortfolioButton({
   disabled,
+  isLoading = false,
   onClick,
 }: CreatePortfolioButtonProps) {
   return (
-    <Button disabled={disabled} onClick={onClick}>
-      포트폴리오 생성하기
+    <Button disabled={disabled || isLoading} onClick={onClick}>
+      {isLoading ? '생성 중...' : '포트폴리오 생성하기'}
     </Button>
   );
 }

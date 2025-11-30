@@ -2,10 +2,12 @@ import styled from '@emotion/styled';
 import { useGitHubStore } from '@/stores/useGitHubStore';
 import { useGitHubStatusCheck } from './hooks/useGitHubStatusCheck';
 import { useRepositorySelect } from './hooks/useRepositorySelect';
+import { useCreatePortfolio } from './hooks/useCreatePortfolio';
 import LoadingSpinner from './components/LoadingSpinner';
 import RepositorySearch from './components/RepositorySearch';
 import RepositoryList from './components/RepositoryList';
 import CreatePortfolioButton from './components/CreatePortfolioButton';
+import Pagination from './components/Pagination';
 
 function RepositorySelectPage() {
   const { connected } = useGitHubStatusCheck();
@@ -16,10 +18,24 @@ function RepositorySelectPage() {
     setSearchQuery,
     selectedRepository,
     handleRepositorySelect,
-    handleCreatePortfolio,
+    currentPage,
+    setCurrentPage,
+    totalPages,
     isLoading,
     error,
   } = useRepositorySelect();
+  const { createPortfolio, isLoading: isCreating } = useCreatePortfolio();
+
+  const handleCreatePortfolio = async () => {
+    if (!selectedRepository) {
+      return;
+    }
+    try {
+      await createPortfolio(selectedRepository);
+    } catch (err) {
+      // 에러는 useCreatePortfolio에서 처리됨
+    }
+  };
 
   if (!connected) {
     return <LoadingSpinner message="GitHub 연결 상태를 확인하는 중..." />;
@@ -35,6 +51,7 @@ function RepositorySelectPage() {
           )}
           <CreatePortfolioButton
             disabled={!selectedRepository}
+            isLoading={isCreating}
             onClick={handleCreatePortfolio}
           />
         </HeaderRight>
@@ -51,6 +68,11 @@ function RepositorySelectPage() {
             repositories={repositories}
             selectedRepository={selectedRepository}
             onSelect={handleRepositorySelect}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
           />
         </>
       )}
