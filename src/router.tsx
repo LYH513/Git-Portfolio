@@ -7,18 +7,20 @@ import Layout from './components/Layout';
 import RepositorySelectPage from './pages/RepositorySelect/RepositorySelectPage';
 import GitHubCallbackPage from './pages/GitHubCallback/GitHubCallbackPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
+import AIfeadbackPage from './pages/AIfeadback/AIfeadbackPage';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: (
-      <ProtectedRoute>
-        <Layout>
-          <HomePage />
-        </Layout>
-      </ProtectedRoute>
-    ),
-  },
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <HomePage />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
   { path: '/login', element: <LoginPage /> },
   {
     path: '/portfolio',
@@ -60,7 +62,21 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-]);
+  {
+    path: '/aifeedback',
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <AIfeadbackPage />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  ],
+  {
+    basename: '/milestone25',
+  },
+);
 
 export default router;
 

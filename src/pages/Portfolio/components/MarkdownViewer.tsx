@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface MarkdownViewerProps {
   content: string;
@@ -11,7 +12,7 @@ export default function MarkdownViewer({ content }: MarkdownViewerProps) {
 
   return (
     <Container>
-      <ReactMarkdown>{processedContent}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{processedContent}</ReactMarkdown>
     </Container>
   );
 }

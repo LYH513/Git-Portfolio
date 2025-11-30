@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import AddProjectModal from './AddProjectModal';
+import CommitConventionModal from './CommitConventionModal';
+import ConventionButton from './ConventionButton';
 import { useGitHubConnection } from '../hooks/useGitHubConnection';
 
 export default function CreateProjectButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConventionModalOpen, setIsConventionModalOpen] = useState(false);
   const { checkGitHubStatus, connectGitHub } = useGitHubConnection();
 
   const handleOpenModal = () => {
@@ -45,6 +48,7 @@ export default function CreateProjectButton() {
   return (
     <>
       <ButtonContainer>
+        <ConventionButton onClick={() => setIsConventionModalOpen(true)} />
         <CreateButton type="button" onClick={handleOpenModal}>
           프로젝트 생성
         </CreateButton>
@@ -54,6 +58,10 @@ export default function CreateProjectButton() {
         onClose={handleCloseModal}
         onImportFromGitHub={handleImportFromGitHub}
         onCreateManually={handleCreateManually}
+      />
+      <CommitConventionModal
+        isOpen={isConventionModalOpen}
+        onClose={() => setIsConventionModalOpen(false)}
       />
     </>
   );
@@ -66,6 +74,7 @@ const ButtonContainer = styled.div`
   padding: 1.5rem 1rem;
   display: flex;
   justify-content: flex-end;
+  gap: 0.75rem;
 
   @media (min-width: 640px) {
     padding-left: 1.5rem;

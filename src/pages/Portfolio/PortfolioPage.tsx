@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import { usePortfolioData } from './hooks/usePortfolioData';
 import LoadingSpinner from '../RepositorySelect/components/LoadingSpinner';
 import MarkdownViewer from './components/MarkdownViewer';
 
 function PortfolioPage() {
+  const navigate = useNavigate();
   const { portfolioData, repository } = usePortfolioData();
 
   if (!portfolioData || !repository) {
@@ -12,6 +14,9 @@ function PortfolioPage() {
 
   return (
     <Container>
+      <BackButton onClick={() => navigate(-1)}>
+        ← 뒤로가기
+      </BackButton>
       <Header>
         <Title>{repository.name}</Title>
         {repository.description && (
@@ -54,6 +59,32 @@ const Container = styled.div`
 
   @media (min-width: 1024px) {
     padding: 2rem;
+  }
+`;
+
+const BackButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+    color: #111827;
+  }
+
+  &:active {
+    background-color: #f3f4f6;
   }
 `;
 
