@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { getGitHubStatus } from '../Home/apis/github';
 import { useGitHubStore } from '@/stores/useGitHubStore';
@@ -34,23 +36,71 @@ function RepositorySelectPage() {
   // 연결되지 않은 경우 로딩 표시
   if (!connected) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2563EB] mx-auto mb-4"></div>
-          <p className="text-gray-600">GitHub 연결 상태를 확인하는 중...</p>
-        </div>
-      </main>
+      <LoadingMain>
+        <LoadingContainer>
+          <Spinner />
+          <LoadingText>GitHub 연결 상태를 확인하는 중...</LoadingText>
+        </LoadingContainer>
+      </LoadingMain>
     );
   }
 
   return (
-    <main>
-      <h1>프로젝트 생성</h1>
+    <Main>
+      <Title>프로젝트 생성</Title>
       {githubName && (
-        <p>연결된 GitHub 계정: {githubName}</p>
+        <Description>연결된 GitHub 계정: {githubName}</Description>
       )}
-    </main>
+    </Main>
   );
 }
 
 export default RepositorySelectPage;
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const LoadingMain = styled.main`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const LoadingContainer = styled.div`
+  text-align: center;
+`;
+
+const Spinner = styled.div`
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid #2563eb;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+  margin: 0 auto 1rem;
+`;
+
+const LoadingText = styled.p`
+  color: #4b5563;
+`;
+
+const Main = styled.main`
+  padding: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const Description = styled.p`
+  color: #4b5563;
+`;

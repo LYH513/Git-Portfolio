@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styled from '@emotion/styled';
 import AddProjectModal from './AddProjectModal';
 import { useGitHubConnection } from '../hooks/useGitHubConnection';
 
@@ -43,15 +44,11 @@ export default function CreateProjectButton() {
 
   return (
     <>
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-end">
-        <button
-          type="button"
-          onClick={handleOpenModal}
-          className="px-6 py-3 bg-[#2563EB] text-white rounded-lg font-medium hover:bg-[#1d4ed8] transition-colors shadow-sm"
-        >
+      <ButtonContainer>
+        <CreateButton type="button" onClick={handleOpenModal}>
           프로젝트 생성
-        </button>
-      </div>
+        </CreateButton>
+      </ButtonContainer>
       <AddProjectModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -61,5 +58,40 @@ export default function CreateProjectButton() {
     </>
   );
 }
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+
+  @media (min-width: 640px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+`;
+
+const CreateButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    background-color: #1d4ed8;
+  }
+`;
 
 

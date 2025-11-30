@@ -1,13 +1,18 @@
+import styled from '@emotion/styled';
 import CreateProjectButton from './components/CreateProjectButton';
 import ProjectList from './components/ProjectList';
 
 function HomePage() {
   return (
-    <main className="pt-4">
+    <Main>
       <CreateProjectButton />
       <ProjectList />
-    </main>
+    </Main>
   );
 }
 
 export default HomePage;
+
+const Main = styled.main`
+  padding-top: 1rem;
+`;

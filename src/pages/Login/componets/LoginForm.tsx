@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { useLogin } from '../hooks/useLogin';
 
 export default function LoginForm() {
@@ -12,45 +13,95 @@ export default function LoginForm() {
   } = useLogin();
 
   return (
-    <form onSubmit={handleSubmit} className="w-full space-y-4">
-      <div>
-        <label htmlFor="login-email" className="block text-sm font-medium text-gray-700 mb-1">
-          이메일
-        </label>
-        <input
+    <Form onSubmit={handleSubmit}>
+      <FormGroup>
+        <Label htmlFor="login-email">이메일</Label>
+        <Input
           id="login-email"
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent"
           placeholder="이메일을 입력하세요"
         />
-      </div>
-      <div>
-        <label htmlFor="login-password" className="block text-sm font-medium text-gray-700 mb-1">
-          비밀번호
-        </label>
-        <input
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="login-password">비밀번호</Label>
+        <Input
           id="login-password"
           type="password"
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent"
           placeholder="비밀번호를 입력하세요"
         />
-      </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full py-2.5 bg-[#2563EB] text-white rounded-lg font-medium hover:bg-[#1d4ed8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
+      </FormGroup>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <SubmitButton type="submit" disabled={isLoading}>
         {isLoading ? '로그인 중...' : '로그인'}
-      </button>
-    </form>
+      </SubmitButton>
+    </Form>
   );
 }
+
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Label = styled.label`
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #2563eb;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 0.875rem;
+  color: #ef4444;
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  padding: 0.625rem;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: #1d4ed8;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
 
 

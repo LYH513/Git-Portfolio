@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getGitHubStatus } from '../Home/apis/github';
 import { useGitHubStore } from '@/stores/useGitHubStore';
@@ -54,19 +56,18 @@ export default function GitHubCallbackPage() {
   }, [navigate, setGitHubStatus, searchParams]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
+    <Container>
+      <Content>
         {status === 'checking' && (
           <>
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2563EB] mx-auto mb-4"></div>
-            <p className="text-gray-600">{message}</p>
+            <Spinner />
+            <Message>{message}</Message>
           </>
         )}
         {status === 'success' && (
           <>
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg
-                className="w-6 h-6 text-green-600"
+            <SuccessIcon>
+              <CheckIcon
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -77,17 +78,16 @@ export default function GitHubCallbackPage() {
                   strokeWidth={2}
                   d="M5 13l4 4L19 7"
                 />
-              </svg>
-            </div>
-            <p className="text-gray-700 font-medium">{message}</p>
-            <p className="text-sm text-gray-500 mt-2">리포지토리 선택 페이지로 이동합니다...</p>
+              </CheckIcon>
+            </SuccessIcon>
+            <SuccessMessage>{message}</SuccessMessage>
+            <SubMessage>리포지토리 선택 페이지로 이동합니다...</SubMessage>
           </>
         )}
         {status === 'error' && (
           <>
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg
-                className="w-6 h-6 text-red-600"
+            <ErrorIcon>
+              <XIcon
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -98,14 +98,99 @@ export default function GitHubCallbackPage() {
                   strokeWidth={2}
                   d="M6 18L18 6M6 6l12 12"
                 />
-              </svg>
-            </div>
-            <p className="text-gray-700 font-medium">{message}</p>
-            <p className="text-sm text-gray-500 mt-2">홈으로 이동합니다...</p>
+              </XIcon>
+            </ErrorIcon>
+            <ErrorMessage>{message}</ErrorMessage>
+            <SubMessage>홈으로 이동합니다...</SubMessage>
           </>
         )}
-      </div>
-    </div>
+      </Content>
+    </Container>
   );
 }
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const Container = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+`;
+
+const Content = styled.div`
+  text-align: center;
+`;
+
+const Spinner = styled.div`
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid #2563eb;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+  margin: 0 auto 1rem;
+`;
+
+const Message = styled.p`
+  color: #4b5563;
+`;
+
+const SuccessIcon = styled.div`
+  width: 3rem;
+  height: 3rem;
+  background-color: #d1fae5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+`;
+
+const CheckIcon = styled.svg`
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #059669;
+`;
+
+const SuccessMessage = styled.p`
+  color: #374151;
+  font-weight: 500;
+`;
+
+const ErrorIcon = styled.div`
+  width: 3rem;
+  height: 3rem;
+  background-color: #fee2e2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+`;
+
+const XIcon = styled.svg`
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #dc2626;
+`;
+
+const ErrorMessage = styled.p`
+  color: #374151;
+  font-weight: 500;
+`;
+
+const SubMessage = styled.p`
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+`;
 
