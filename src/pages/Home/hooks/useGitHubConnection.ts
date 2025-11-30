@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { getGitHubStatus } from '../apis/github';
 import { useGitHubStore } from '@/stores/useGitHubStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { BASE_URL } from '@/apis/config';
 
 export function useGitHubConnection() {
   const navigate = useNavigate();
   const setGitHubStatus = useGitHubStore(state => state.setGitHubStatus);
+  const userId = useAuthStore(state => state.userId);
 
   const checkGitHubStatus = async (): Promise<boolean> => {
     try {
@@ -30,8 +32,11 @@ export function useGitHubConnection() {
 
   const connectGitHub = () => {
     // GitHub OAuth 연결 시작
-    const connectUrl = `${BASE_URL}/auth/github/connect`;
-    window.location.href = connectUrl;
+    const url = new URL(`${BASE_URL}/auth/github/connect`);
+    if (userId) {
+      url.searchParams.set('userId', userId.toString());
+    }
+    window.location.href = url.toString();
   };
 
   return {

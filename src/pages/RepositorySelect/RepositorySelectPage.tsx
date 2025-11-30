@@ -1,106 +1,114 @@
-import { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/react';
-import { useNavigate } from 'react-router-dom';
-import { getGitHubStatus } from '../Home/apis/github';
 import { useGitHubStore } from '@/stores/useGitHubStore';
+import { useGitHubStatusCheck } from './hooks/useGitHubStatusCheck';
+import { useRepositorySelect } from './hooks/useRepositorySelect';
+import LoadingSpinner from './components/LoadingSpinner';
+import RepositorySearch from './components/RepositorySearch';
+import RepositoryList from './components/RepositoryList';
+import CreatePortfolioButton from './components/CreatePortfolioButton';
 
 function RepositorySelectPage() {
-  const navigate = useNavigate();
-  const { connected, githubName, setGitHubStatus } = useGitHubStore();
-  
-  useEffect(() => {
-    const checkGitHubStatus = async () => {
-      try {
-        // API에서 최신 상태 확인
-        const status = await getGitHubStatus();
-        console.log('RepositorySelectPage - GitHub 상태:', status);
-        
-        // 스토어 업데이트
-        setGitHubStatus(status.connected, status.githubName);
-        
-        // 연결되지 않았다면 홈으로 리다이렉트
-        if (!status.connected) {
-          console.warn('GitHub가 연결되지 않았습니다. 홈으로 이동합니다.');
-          navigate('/');
-        }
-      } catch (error) {
-        console.error('GitHub 상태 확인 실패:', error);
-        navigate('/');
-      }
-    };
+  const { connected } = useGitHubStatusCheck();
+  const { githubName } = useGitHubStore();
+  const {
+    repositories,
+    searchQuery,
+    setSearchQuery,
+    selectedRepository,
+    handleRepositorySelect,
+    handleCreatePortfolio,
+    isLoading,
+    error,
+  } = useRepositorySelect();
 
-    checkGitHubStatus();
-  }, [navigate, setGitHubStatus]);
-
-  // 연결되지 않은 경우 로딩 표시
   if (!connected) {
-    return (
-      <LoadingMain>
-        <LoadingContainer>
-          <Spinner />
-          <LoadingText>GitHub 연결 상태를 확인하는 중...</LoadingText>
-        </LoadingContainer>
-      </LoadingMain>
-    );
+    return <LoadingSpinner message="GitHub 연결 상태를 확인하는 중..." />;
   }
 
   return (
-    <Main>
-      <Title>프로젝트 생성</Title>
-      {githubName && (
-        <Description>연결된 GitHub 계정: {githubName}</Description>
+    <Container>
+      <Header>
+        <Title>레포지토리 선택</Title>
+        <HeaderRight>
+          {githubName && (
+            <Description>연결된 GitHub 계정: {githubName}</Description>
+          )}
+          <CreatePortfolioButton
+            disabled={!selectedRepository}
+            onClick={handleCreatePortfolio}
+          />
+        </HeaderRight>
+      </Header>
+
+      {isLoading ? (
+        <LoadingSpinner message="레포지토리를 불러오는 중..." />
+      ) : error ? (
+        <ErrorMessage>{error}</ErrorMessage>
+      ) : (
+        <>
+          <RepositorySearch value={searchQuery} onChange={setSearchQuery} />
+          <RepositoryList
+            repositories={repositories}
+            selectedRepository={selectedRepository}
+            onSelect={handleRepositorySelect}
+          />
+        </>
       )}
-    </Main>
+    </Container>
   );
 }
 
 export default RepositorySelectPage;
 
-const spin = keyframes`
-  from {
-    transform: rotate(0deg);
+const Container = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 2rem 1.5rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  @media (min-width: 1024px) {
+    padding: 2rem;
   }
 `;
 
-const LoadingMain = styled.main`
-  min-height: 100vh;
+const Header = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-`;
-
-const LoadingContainer = styled.div`
-  text-align: center;
-`;
-
-const Spinner = styled.div`
-  width: 3rem;
-  height: 3rem;
-  border: 2px solid #2563eb;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: ${spin} 1s linear infinite;
-  margin: 0 auto 1rem;
-`;
-
-const LoadingText = styled.p`
-  color: #4b5563;
-`;
-
-const Main = styled.main`
-  padding: 2rem;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 `;
 
 const Title = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.875rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  color: #111827;
+  margin: 0;
+`;
+
+const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 `;
 
 const Description = styled.p`
-  color: #4b5563;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0;
+  text-align: right;
+`;
+
+const ErrorMessage = styled.div`
+  padding: 1.5rem;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-weight: 500;
 `;
