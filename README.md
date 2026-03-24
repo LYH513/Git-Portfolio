@@ -71,3 +71,5 @@ export default defineConfig([
   },
 ])
 ```
+
+리액트로 바이브코딩한것
